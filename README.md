@@ -2,13 +2,13 @@
 
 This is a web game made with HTML, CSS, and JavaScript.
 
-### Play the Game
+## Installation & Usage
 
-[Click here to play](https://bottledpepsi.github.io/NVIDIA-Clicker/)
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/bottledpepsi/NVIDIA-Clicker.git
 
-### How to Use
+2. **Website:**
 
-Clone the repo or open the link above.
-
-```bash
-git clone https://github.com/bottledpepsi/NVIDIA-Clicker.git
+   You can test right now at:
+   **[https://bottledpepsi.github.io/NVIDIA-Clicker/](https://bottledpepsi.github.io/NVIDIA-Clicker/)**
