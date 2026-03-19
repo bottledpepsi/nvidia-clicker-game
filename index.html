@@ -3,858 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0 - Frames</title>
+    <title>NVIDIA Clicker</title>
     <link rel="icon" href="https://icons.iconarchive.com/icons/martz90/circle-addon1/512/nvidia-icon.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            position: relative;
-            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-            color: #fff;
-            height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
-            padding-bottom: 80px;
-            box-sizing: border-box;
-        }
-
-        #leftPanel, #rightPanel {
-            width: 45%;
-            margin-top: 50px;
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
-        }
-
-        #leftPanel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: sticky;
-            top: 50px;
-        }
-
-        #framesContainer {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(118, 185, 0, 0.1);
-            border-radius: 15px;
-            border: 1px solid rgba(118, 185, 0, 0.3);
-        }
-
-        #frames {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(118, 185, 0, 0.5);
-        }
-
-        #fpsCounter {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #76B900;
-        }
-
-        #store {
-            border: 2px solid #444;
-            padding: 20px;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #2e2e2e 0%, #3e3e3e 100%);
-            position: relative;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        #store h2 {
-            color: #76B900;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(118, 185, 0, 0.3);
-        }
-
-        #store h3 {
-            color: #ccc;
-            margin: 20px 0 15px 0;
-            border-bottom: 1px solid #444;
-            padding-bottom: 5px;
-        }
-
-        .upgrade-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .upgrade-item:hover {
-            background: rgba(118, 185, 0, 0.1);
-            transform: translateX(5px);
-        }
-
-        .upgradeButton, .oneTimeUpgradeButton {
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background: linear-gradient(135deg, #76B900 0%, #6aa800 100%);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            min-width: 200px;
-            text-align: left;
-        }
-
-        .upgradeButton:hover, .oneTimeUpgradeButton:hover {
-            background: linear-gradient(135deg, #6aa800 0%, #5a9600 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(118, 185, 0, 0.4);
-        }
-
-        .upgradeButton:disabled, .oneTimeUpgradeButton:disabled {
-            background: linear-gradient(135deg, #666 0%, #555 100%);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .upgradePrice, .oneTimeUpgradePrice {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 12px;
-            border-radius: 6px;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .tooltip {
-            display: none;
-            position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            z-index: 1000;
-            white-space: nowrap;
-            border: 1px solid #76B900;
-        }
-
-        .tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #76B900 transparent transparent transparent;
-        }
-
-        .upgradeButton:hover .tooltip, .oneTimeUpgradeButton:hover .tooltip {
-            display: block;
-        }
-
-        #clicker {
-            width: 280px;
-            height: 280px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-drag: none;
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(118, 185, 0, 0.3);
-            filter: drop-shadow(0 0 20px rgba(118, 185, 0, 0.2));
-        }
-
-        #clicker:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(118, 185, 0, 0.5);
-        }
-
-        #clicker:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 50px rgba(118, 185, 0, 0.7);
-        }
-
-        .particle {
-            position: absolute;
-            font-size: 20px;
-            color: #111a00;
-            font-weight: bold;
-            animation: floatUp 1.5s ease-out forwards;
-            pointer-events: none;
-            text-shadow: 0 0 10px rgba(118, 185, 0, 0.8);
-        }
-
-        @keyframes floatUp {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(-30px) scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-80px) scale(0.8);
-            }
-        }
-
-        #debugToggle, #godButton {
-            position: fixed;
-            bottom: 20px;
-            padding: 10px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        #debugToggle {
-            left: 20px;
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        }
-
-        #debugToggle:hover {
-            background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-        }
-
-        #godButton {
-            right: 20px;
-            background: linear-gradient(135deg, #0f0f0f 0%, #333 100%);
-        }
-
-        #godButton:hover {
-            background: linear-gradient(135deg, #333 0%, #555 100%);
-        }
-
-        #debugInfo {
-            display: none;
-            position: fixed;
-            bottom: 70px;
-            left: 20px;
-            padding: 15px;
-            font-size: 14px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            border-radius: 10px;
-            z-index: 1000;
-            font-family: 'Courier New', Courier, monospace;
-            border: 1px solid #444;
-            backdrop-filter: blur(10px);
-        }
-
-        #hiddenMenu {
-            position: fixed;
-            bottom: 60px;
-            left: 20px;
-            z-index: 1000;
-        }
-
-        #menuButton {
-            background: rgba(0,0,0,0.8);
-            color: #76B900;
-            border: 1px solid #76B900;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(118, 185, 0, 0.5);
-        }
-
-        #menuItems {
-            display: none;
-            position: absolute;
-            left: 0;
-            bottom: 35px;
-            background: rgba(0,0,0,0.9);
-            border: 1px solid #76B900;
-            border-radius: 5px;
-            padding: 5px 0;
-            min-width: 150px;
-            box-shadow: 0 0 15px rgba(118, 185, 0, 0.3);
-        }
-
-        #menuItems button {
-            background: none;
-            border: none;
-            color: #76B900;
-            padding: 8px 15px;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        #menuItems button:hover {
-            background: rgba(118, 185, 0, 0.2);
-        }
-
-        footer {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            color: #76B900;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 12px;
-            border-top: 1px solid rgba(118, 185, 0, 0.3);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 100;
-            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        footer p {
-            margin: 3px 0;
-        }
-
-        footer h3 {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        footer a {
-            color: #76B900;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        footer a:hover {
-            text-shadow: 0 0 5px rgba(118, 185, 0, 0.5);
-        }
-
-        .debug-item {
-            margin: 5px 0;
-            display: flex;
-            justify-content: space-between;
-            min-width: 200px;
-        }
-
-        .debug-label {
-            color: #76B900;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-                height: auto;
-                min-height: 100vh;
-            }
-            
-            #leftPanel, #rightPanel {
-                width: 90%;
-                margin: 20px auto;
-                max-height: none;
-            }
-            
-            #clicker {
-                width: 200px;
-                height: 200px;
-            }
-            
-            #frames {
-                font-size: 28px;
-            }
-            
-            #fpsCounter {
-                font-size: 20px;
-            }
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- ===== BURGER MENU ===== -->
     <div id="hiddenMenu">
-        <div id="menuButton">≡</div>
-        <div id="menuItems">
-            <button id="resetSave">Reset Save</button>
+        <button id="menuButton" aria-label="Options menu" aria-haspopup="true" aria-expanded="false">≡</button>
+        <div id="menuItems" role="menu">
+            <button id="openSettings" role="menuitem">Settings</button>
+            <button id="resetSave"    role="menuitem">Reset Save</button>
         </div>
     </div>
-<div id="leftPanel">
-    <div id="framesContainer">
-        <div id="frames" aria-live="polite">Frames: <span id="framesValue">0</span></div>
-        <div id="fpsCounter" aria-live="polite">Frames Per Second: <span id="fps">0.0</span></div>
-    </div>
-    <img src="https://icons.iconarchive.com/icons/martz90/circle-addon1/512/nvidia-icon.png" alt="Nvidia" 
-    id="clicker" role="button" draggable="false" onmousedown="return false;" onselectstart="return false;" tabindex="0">
-</div>
 
-<div id="rightPanel">
-    <div id="store">
-        <h2>Store</h2>
-        <h3>One-Time Upgrades</h3>
-        <div class="upgrade-item">
-            <button class="oneTimeUpgradeButton" id="oneTimeUpgrade1" aria-label="Buy Heatsink #1, improves frames per second by 20%">Heatsink #1
-                <span class="tooltip">Improves frames per second by 20%</span>
-            </button>
-            <span class="oneTimeUpgradePrice" id="oneTimeUpgrade1Price">Cost: 500</span>
-        </div>
-        <div class="upgrade-item">
-            <button class="oneTimeUpgradeButton" id="oneTimeUpgrade2" aria-label="Buy GPU Cluster, doubles the effect of Heatsink #1">GPU Cluster
-                <span class="tooltip">Doubles the effect of Heatsink #1</span>
-            </button>
-            <span class="oneTimeUpgradePrice" id="oneTimeUpgrade2Price">Cost: 5000</span>
-        </div>
-        <div class="upgrade-item">
-            <button class="oneTimeUpgradeButton" id="oneTimeUpgrade3" aria-label="Buy Liquid Cooling, increases all frame generation by 25%">Liquid Cooling
-                <span class="tooltip">Increases all frame generation by 25%</span>
-            </button>
-            <span class="oneTimeUpgradePrice" id="oneTimeUpgrade3Price">Cost: 25000</span>
-        </div>
-        <div class="upgrade-item">
-            <button class="oneTimeUpgradeButton" id="oneTimeUpgrade4" aria-label="Buy Overclocking Kit, doubles all frame generation">Overclocking Kit
-                <span class="tooltip">Doubles all frame generation</span>
-            </button>
-            <span class="oneTimeUpgradePrice" id="oneTimeUpgrade4Price">Cost: 250000</span>
-        </div>
-        <div class="upgrade-item">
-            <button class="oneTimeUpgradeButton" id="oneTimeUpgrade5" aria-label="Buy Quantum Cooling, multiplies all frame generation by 5x">Quantum Cooling
-                <span class="tooltip">Multiplies all frame generation by 5x</span>
-            </button>
-            <span class="oneTimeUpgradePrice" id="oneTimeUpgrade5Price">Cost: 10000000</span>
-        </div>
-        
-        <h3>Regular Upgrades</h3>
-        <div class="upgrade-item">
-            <button class="upgradeButton" id="upgrade1" aria-label="Upgrade to GeForce 256, increases frames per second by 0.1">GeForce 256
-                <span class="tooltip">Increases frames per second by 0.1</span>
-            </button>
-            <span class="upgradePrice" id="upgrade1Price">Cost: 15</span>
-        </div>
-        <div class="upgrade-item" id="upgrade2Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade2" aria-label="Upgrade to GeForce Ti4600, increases frames per second by 1">GeForce Ti4600
-                <span class="tooltip">Increases frames per second by 1</span>
-            </button>
-            <span class="upgradePrice" id="upgrade2Price">Cost: 100</span>
-        </div>
-        <div class="upgrade-item" id="upgrade3Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade3" aria-label="Upgrade to GeForce 7800, increases frames per second by 10">GeForce 7800
-                <span class="tooltip">Increases frames per second by 10</span>
-            </button>
-            <span class="upgradePrice" id="upgrade3Price">Cost: 1100</span>
-        </div>
-        <div class="upgrade-item" id="upgrade4Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade4" aria-label="Upgrade to GeForce 8800 GTS, increases frames per second by 50">GeForce 8800 GTS
-                <span class="tooltip">Increases frames per second by 50</span>
-            </button>
-            <span class="upgradePrice" id="upgrade4Price">Cost: 12000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade5Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade5" aria-label="Upgrade to GeForce GTX 670, increases frames per second by 250">GeForce GTX 670
-                <span class="tooltip">Increases frames per second by 250</span>
-            </button>
-            <span class="upgradePrice" id="upgrade5Price">Cost: 130000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade6Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade6" aria-label="Upgrade to GeForce RTX 2080 Ti, increases frames per second by 1,500">GeForce RTX 2080 Ti
-                <span class="tooltip">Increases frames per second by 1.5k</span>
-            </button>
-            <span class="upgradePrice" id="upgrade6Price">Cost: 14000000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade7Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade7" aria-label="Upgrade to GeForce RTX 4090, increases frames per second by 8,000">GeForce RTX 4090
-                <span class="tooltip">Increases frames per second by 8k</span>
-            </button>
-            <span class="upgradePrice" id="upgrade7Price">Cost: 20000000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade8Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade8" aria-label="Upgrade to GeForce RTX 5070 Ti, increases frames per second by 40,000">GeForce RTX 5070 Ti
-                <span class="tooltip">Increases frames per second by 40k</span>
-            </button>
-            <span class="upgradePrice" id="upgrade8Price">Cost: 330000000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade9Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade9" aria-label="Upgrade to GeForce RTX 6080 SUPER, increases frames per second by 250,000">GeForce RTX 6080 SUPER
-                <span class="tooltip">Increases frames per second by 250k</span>
-            </button>
-            <span class="upgradePrice" id="upgrade9Price">Cost: 5100000000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade10Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade10" aria-label="Upgrade to GeForce RTX Pro 9090 Ti SUPER TITAN XP, increases frames per second by 50,000,000">GeForce RTX Pro 9090 Ti SUPER TITAN XP
-                <span class="tooltip">Increases frames per second by 50M</span>
-            </button>
-            <span class="upgradePrice" id="upgrade10Price">Cost: 1020000000000</span>
-        </div>
-        <div class="upgrade-item" id="upgrade11Container" style="display:none;">
-            <button class="upgradeButton" id="upgrade11" aria-label="Upgrade to GeForce RTX Pro 6760 Ti SUPER TITAN XP ULTRA OC, increases frames per second by 10,000,000,000">GeForce RTX Pro 6760 Ti SUPER TITAN XP ULTRA OC
-                <span class="tooltip">Increases frames per second by 10B</span>
-            </button>
-            <span class="upgradePrice" id="upgrade11Price">Cost: 2151025809875700</span>
+    <!-- ===== SETTINGS MODAL ===== -->
+    <div id="settingsModal" class="modal-overlay" hidden>
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Settings</span>
+                <button id="closeSettings" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <label class="setting-row">
+                    <div class="setting-label">
+                        <span class="setting-name">Show statistics</span>
+                        <span class="setting-desc">Display the stats panel below the clicker</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="set-showStats">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
+                <label class="setting-row">
+                    <div class="setting-label">
+                        <span class="setting-name">Click particles</span>
+                        <span class="setting-desc">Floating +N text on each click</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="set-particles">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
+                <label class="setting-row">
+                    <div class="setting-label">
+                        <span class="setting-name">FPS in tab title</span>
+                        <span class="setting-desc">Show current FPS instead of frame count</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="set-titleFPS">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
+            </div>
+            <div class="modal-footer">Settings saved automatically to your browser</div>
         </div>
     </div>
-</div>
 
-<!-- Debug and GodMode buttons -->
+    <!-- ===== LEFT PANEL ===== -->
+    <div id="leftPanel">
 
-<!-- <button id="debugToggle" aria-controls="debugInfo" aria-expanded="false">Toggle Debug Info</button> --> 
-<!-- <button id="godButton">God Button</button> -->
+        <!-- Frame counter -->
+        <div id="framesContainer" aria-live="polite" aria-atomic="true">
+            <div id="framesLabel">Total Frames</div>
+            <div id="frames"><span id="framesValue">0</span></div>
+            <div id="fpsCounter">
+                <span id="fpsValue">0.0</span> frames / sec
+            </div>
+        </div>
 
-<div id="debugInfo" role="region" aria-live="polite">
-    <div class="debug-item"><span class="debug-label">Upgrade 1 Bought:</span> <span id="upgrade1Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 2 Bought:</span> <span id="upgrade2Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 3 Bought:</span> <span id="upgrade3Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 4 Bought:</span> <span id="upgrade4Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 5 Bought:</span> <span id="upgrade5Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 6 Bought:</span> <span id="upgrade6Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 7 Bought:</span> <span id="upgrade7Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 8 Bought:</span> <span id="upgrade8Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 9 Bought:</span> <span id="upgrade9Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 10 Bought:</span> <span id="upgrade10Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Upgrade 11 Bought:</span> <span id="upgrade11Bought">0</span></div>
-    <div class="debug-item"><span class="debug-label">Total Frames:</span> <span id="totalFrames">0</span></div>
-    <div class="debug-item"><span class="debug-label">Clicks Per Second:</span> <span id="clicksPerSecond">0.0</span></div>
-    <div class="debug-item"><span class="debug-label">God Mode Active:</span> <span id="godModeActive">No</span></div>
-</div>
+        <!-- Active buff indicator (hidden until magic chip is collected) -->
+        <div id="buffBar" hidden>
+            <div id="buffLabel">x5 BUFF — 30s</div>
+            <div id="buffTrack"><div id="buffFill"></div></div>
+        </div>
 
-<script>
-    class NvidiaClicker {
-        constructor() {
-            this.gameState = {
-                frames: 0,
-                clicksPerSecond: 0,
-                upgrades: {
-                    prices: [15, 100, 1100, 12000, 130000, 14000000, 20000000, 330000000, 5100000000, 1020000000000, 2151025809875700],
-                    bought: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    effects: [0.1, 1, 10, 50, 250, 1500, 8000, 40000, 250000, 50000000]
-                },
-                oneTimeUpgrades: {
-                    prices: [500, 5000, 25000, 250000, 10000000],
-                    bought: [false, false, false, false, false]
-                },
-                debugVisible: false,
-                godModeActive: false
-            };
-            
-            this.elements = this.cacheElements();
-            this.init();
-        }
-        
-        cacheElements() {
-            return {
-                clicker: document.getElementById('clicker'),
-                framesValue: document.getElementById('framesValue'),
-                fps: document.getElementById('fps'),
-                debugToggle: document.getElementById('debugToggle'),
-                godButton: document.getElementById('godButton'),
-                debugInfo: document.getElementById('debugInfo'),
-                totalFrames: document.getElementById('totalFrames'),
-                clicksPerSecond: document.getElementById('clicksPerSecond'),
-                godModeActive: document.getElementById('godModeActive'),
-                upgradeButtons: Array.from({length: 10}, (_, i) => document.getElementById(`upgrade${i + 1}`)),
-                upgradePrices: Array.from({length: 10}, (_, i) => document.getElementById(`upgrade${i + 1}Price`)),
-                upgradeBought: Array.from({length: 10}, (_, i) => document.getElementById(`upgrade${i + 1}Bought`)),
-                upgradeContainers: Array.from({length: 10}, (_, i) => document.getElementById(`upgrade${i + 2}Container`)),
-                oneTimeUpgradeButtons: Array.from({length: 5}, (_, i) => document.getElementById(`oneTimeUpgrade${i + 1}`)),
-                oneTimeUpgradePrices: Array.from({length: 5}, (_, i) => document.getElementById(`oneTimeUpgrade${i + 1}Price`))
-            };
-        }
-        
-        init() {
-            // Setup hidden menu
-            const menuButton = document.getElementById('menuButton');
-            const menuItems = document.getElementById('menuItems');
-            const resetSave = document.getElementById('resetSave');
-            
-            menuButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            resetSave.addEventListener('click', () => {
-                if (confirm('Are you sure you want to reset your save? This cannot be undone!')) {
-                    localStorage.removeItem('nvidiaClickerSave');
-                    location.reload();
-                }
-            });
-            
-            document.addEventListener('click', () => {
-                menuItems.style.display = 'none';
-            });
-            this.bindEvents();
-            this.loadGame();
-            this.showOwnedUpgrades();  // show upgrades unlocked by bought previous ones
-            this.updateDisplay();
-            this.startGameLoop();
+        <!-- Clicker + golden chip -->
+        <div id="clickerWrapper">
+            <img
+                src="https://icons.iconarchive.com/icons/martz90/circle-addon1/512/nvidia-icon.png"
+                alt="Click to generate frames"
+                id="clicker"
+                role="button"
+                tabindex="0"
+                draggable="false"
+            >
+        </div>
 
-            setInterval(() => this.saveGame(), 5000); // Save every 5 seconds
-        }
-        
-        bindEvents() {
-            // Click events
-            this.elements.clicker.addEventListener('click', () => this.handleClick());
-            this.elements.clicker.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.handleClick();
-                }
-            });
-            
-            // Debug and god mode
-            // this.elements.debugToggle.addEventListener('click', () => this.toggleDebug());
-            // this.elements.godButton.addEventListener('click', () => this.activateGodMode());
-            
-            // Upgrade buttons
-            this.elements.upgradeButtons.forEach((button, index) => {
-                button.addEventListener('click', () => this.purchaseUpgrade(index));
-            });
-            
-            this.elements.oneTimeUpgradeButtons.forEach((button, index) => {
-                button.addEventListener('click', () => this.purchaseOneTimeUpgrade(index));
-            });
-        }
-        
-        calculateClickMultiplier() {
-            let multiplier = 1;
-            if (this.gameState.oneTimeUpgrades.bought[0]) multiplier *= 1.2;
-            if (this.gameState.oneTimeUpgrades.bought[1]) multiplier *= 2;
-            if (this.gameState.oneTimeUpgrades.bought[2]) multiplier *= 1.25;
-            if (this.gameState.oneTimeUpgrades.bought[3]) multiplier *= 2;
-            if (this.gameState.oneTimeUpgrades.bought[4]) multiplier *= 5;
-            return multiplier;
-        }
+        <!--
+            Magic chip spawn zone — the only area where the MagicChip can appear.
+            Keep clear of the upgrades panel. Chip spawns randomly within this box.
+            Replace the placeholder src below with your real magic chip PNG when ready.
+        -->
+        <div id="magicSpawnZone" aria-label="Magic chip spawn area">
+            <div id="magicChip" hidden role="button" tabindex="0" aria-label="Magic Chip! Click for x5 frames!">
+                <!-- PLACEHOLDER: swap src to your real magic chip PNG -->
+                <img
+                    src="https://placehold.co/80x80/1a003a/c970ff?text=✦"
+                    alt="Magic Chip"
+                    draggable="false"
+                >
+                <span class="magic-label">MAGIC</span>
+            </div>
+        </div>
 
-        handleClick() {
-            const clickMultiplier = this.calculateClickMultiplier();
-            this.gameState.frames += clickMultiplier;
-            this.updateDisplay();
-            this.createClickParticle(clickMultiplier);
-        }
-        
-        createClickParticle(clickMultiplier) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.textContent = `+${clickMultiplier.toFixed(1)}`;
-            
-            const rect = this.elements.clicker.getBoundingClientRect();
-            particle.style.left = (rect.left + Math.random() * rect.width) + 'px';
-            particle.style.top = (rect.top + Math.random() * rect.height) + 'px';
-            
-            document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), 1500);
-        }
-        
-        purchaseUpgrade(index) {
-            const price = this.gameState.upgrades.prices[index];
-            if (this.gameState.frames >= price) {
-                this.gameState.upgrades.bought[index]++;
-                this.gameState.frames -= price;
-                this.gameState.upgrades.prices[index] = Math.ceil(price * 1.15);
-                
-                this.updateDisplay();
-                this.revealNextUpgrade(index);
-            } else {
-                this.showInsufficientFundsAlert();
-            }
-        }
-        
-        purchaseOneTimeUpgrade(index) {
-            const price = this.gameState.oneTimeUpgrades.prices[index];
-            if (this.gameState.frames >= price && !this.gameState.oneTimeUpgrades.bought[index]) {
-                this.gameState.frames -= price;
-                this.gameState.oneTimeUpgrades.bought[index] = true;
-                
-                this.elements.oneTimeUpgradeButtons[index].style.display = 'none';
-                this.elements.oneTimeUpgradePrices[index].style.display = 'none';
-                
-                // Update tooltip for GPU Cluster effect
-                if (index === 1) {
-                    const heatsinkTooltip = document.querySelector('#oneTimeUpgrade1 .tooltip');
-                    if (heatsinkTooltip) {
-                        heatsinkTooltip.textContent = "Improves frames per second by 40%";
-                    }
-                }
-                
-                this.updateDisplay();
-            } else {
-                this.showInsufficientFundsAlert();
-            }
-        }
-        
-        revealNextUpgrade(currentIndex) {
-            if (currentIndex < this.elements.upgradeContainers.length) {
-                this.elements.upgradeContainers[currentIndex].style.display = 'block';
-            }
-        }
-        
-        showInsufficientFundsAlert() {
-            alert("Not enough frames to purchase this upgrade!");
-        }
-        
-        calculateClicksPerSecond() {
-            let baseClicksPerSecond = 0;
-            for (let i = 0; i < this.gameState.upgrades.bought.length; i++) {
-                baseClicksPerSecond += this.gameState.upgrades.bought[i] * this.gameState.upgrades.effects[i];
-            }
-            
-            let multiplier = 1;
-            if (this.gameState.oneTimeUpgrades.bought[0]) multiplier *= 1.2;
-            if (this.gameState.oneTimeUpgrades.bought[1]) multiplier *= 2;
-            if (this.gameState.oneTimeUpgrades.bought[2]) multiplier *= 1.25;
-            if (this.gameState.oneTimeUpgrades.bought[3]) multiplier *= 2;
-            if (this.gameState.oneTimeUpgrades.bought[4]) multiplier *= 5;
-            
-            this.gameState.clicksPerSecond = baseClicksPerSecond * multiplier;
-        }
-        
-        updateDisplay() {
-            this.calculateClicksPerSecond();
-            
-            // Update main display
-            const displayFrames = this.shortenNumber(this.gameState.frames);
-            const displayFPS = this.shortenNumber(this.gameState.clicksPerSecond);
-            
-            this.elements.framesValue.textContent = displayFrames;
-            this.elements.fps.textContent = displayFPS;
-            document.title = `${displayFrames} Frames - NVIDIA Clicker`;
-            
-            // Update upgrade buttons
-            this.updateUpgradeButtons();
-            
-            // Update debug info
-            if (this.gameState.debugVisible) {
-                this.updateDebugInfo();
-            }
-        }
-        
-        updateUpgradeButtons() {
-            // Regular upgrades
-            this.elements.upgradeButtons.forEach((button, index) => {
-                const price = this.gameState.upgrades.prices[index] || 0;
-                this.elements.upgradePrices[index].textContent = `Cost: ${this.shortenNumber(price)}`;
-                this.elements.upgradeBought[index].textContent = this.gameState.upgrades.bought[index] || 0;
-                button.disabled = this.gameState.frames < price;
-            });
-            
-            // One-time upgrades
-            this.elements.oneTimeUpgradeButtons.forEach((button, index) => {
-                if (!this.gameState.oneTimeUpgrades.bought[index]) {
-                    const price = this.gameState.oneTimeUpgrades.prices[index] || 0;
-                    this.elements.oneTimeUpgradePrices[index].textContent = `Cost: ${this.shortenNumber(price)}`;
-                    button.disabled = this.gameState.frames < price;
-                }
-            });
-        }
-        
-        updateDebugInfo() {
-            this.elements.totalFrames.textContent = this.shortenNumber(this.gameState.frames);
-            this.elements.clicksPerSecond.textContent = this.shortenNumber(this.gameState.clicksPerSecond);
-            this.elements.godModeActive.textContent = this.gameState.godModeActive ? 'Yes' : 'No';
-        }
-        
-        toggleDebug() {
-            this.gameState.debugVisible = !this.gameState.debugVisible;
-            this.elements.debugInfo.style.display = this.gameState.debugVisible ? 'block' : 'none';
-            this.elements.debugToggle.setAttribute('aria-expanded', this.gameState.debugVisible);
-            
-            if (this.gameState.debugVisible) {
-                this.updateDebugInfo();
-            }
-        }
-        
-        activateGodMode() {
-            this.gameState.frames *= 2;
-            this.gameState.godModeActive = true;
-            this.updateDisplay();
-        }
-        
-        shortenNumber(num) {
-            if (typeof num !== 'number' || isNaN(num)) {
-                return '0';
-            }
-            const units = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd"];
-            let unitIndex = 0;
-            while (num >= 1000 && unitIndex < units.length - 1) {
-                num /= 1000;
-                unitIndex++;
-            }
-            return num.toFixed(num < 10 ? 1 : 0) + units[unitIndex];
-        }
-        
-        showOwnedUpgrades() {
-        for (let i = 1; i < this.gameState.upgrades.bought.length; i++) {
-            if (this.gameState.upgrades.bought[i - 1] > 0) {
-            this.elements.upgradeContainers[i - 1].style.display = 'block';
-            } else {
-                break; // stop once a previous upgrade is not bought
-                }
-            }   
-        }
+        <!-- Statistics panel — hidden by default, toggled in Settings -->
+        <div id="statsPanel">
+            <div class="stats-header">Statistics</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">All-Time Frames</span>
+                    <span class="stat-value" id="stat-totalFrames">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Clicks</span>
+                    <span class="stat-value" id="stat-totalClicks">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Click Value</span>
+                    <span class="stat-value" id="stat-clickValue">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Passive Mult</span>
+                    <span class="stat-value" id="stat-passiveMult">x1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Click Mult</span>
+                    <span class="stat-value" id="stat-clickMult">x1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">GPUs Owned</span>
+                    <span class="stat-value" id="stat-gpusOwned">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Peak FPS</span>
+                    <span class="stat-value" id="stat-peakFPS">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Boosters</span>
+                    <span class="stat-value" id="stat-boosters">0 / 26</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Session Time</span>
+                    <span class="stat-value" id="stat-sessionTime">0s</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Magic Rate</span>
+                    <span class="stat-value" id="stat-magicRate">~60 min</span>
+                </div>
+            </div>
+        </div>
 
-        startGameLoop() {
-            setInterval(() => {
-                if (this.gameState.clicksPerSecond > 0) {
-                    this.gameState.frames += this.gameState.clicksPerSecond;
-                    this.updateDisplay();
-                }
-            }, 1000);
-        }
-        saveGame() {
-    localStorage.setItem('nvidiaClickerSave', JSON.stringify(this.gameState));
-        }
+    </div><!-- /leftPanel -->
 
-        loadGame() {
-            const saved = localStorage.getItem('nvidiaClickerSave');
-            if (saved) {
-                try {
-                    this.gameState = JSON.parse(saved);
-                } catch (e) {
-                    console.warn('Save corrupted. Starting fresh.');
-                }
-            }
-        }
-
-    }
-    
-    // Initialize the game when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        new NvidiaClicker();
-    });
-</script>
-
-<footer>
-    <div style="display: flex; justify-content: space-around; max-width: 900px; margin: 0 auto; gap: 8px;">
-        <p>Not affiliated with NVIDIA Corporation</p>
-        <p>|</p>
-        <p><a href="https://bottledpepsi.github.io/" target="_blank">Website Homepage</a></p>
-        <p>|</p>
-        <p><a href="https://github.com/bottledpepsi/nvidia-clicker-game/" target="_blank">GitHub Repository</a></p>
-        <p>|</p>
-        <p>NVIDIA Clicker Version 1.11.1</p>
+    <!-- ===== RIGHT PANEL ===== -->
+    <div id="rightPanel">
+        <div id="store">
+            <h2>Store</h2>
+            <div class="section-label">One-Time Upgrades</div>
+            <div id="oneTimeUpgradesContainer"></div>
+            <div class="section-label">GPU Upgrades</div>
+            <div id="regularUpgradesContainer"></div>
+        </div>
     </div>
-</footer>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" role="alert" aria-live="assertive"></div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-inner">
+            <span>Not affiliated with NVIDIA Corporation</span>
+            <span>|</span>
+            <a href="https://bottledpepsi.github.io/" target="_blank" rel="noopener">Homepage</a>
+            <span>|</span>
+            <a href="https://github.com/bottledpepsi/nvidia-clicker-game/" target="_blank" rel="noopener">GitHub</a>
+            <span>|</span>
+            <span>v2.1.0</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
-
-
-
