@@ -10,7 +10,7 @@
 
 // ===== LOGGER =====
 const log = (() => {
-    const PREFIX = '%c[GPC]%c';
+    const PREFIX = '%c[NVC]%c';
     const BASE   = 'color:#76B900;font-weight:bold';
     const RESET  = 'color:inherit;font-weight:normal';
     return {
@@ -1143,28 +1143,28 @@ document.addEventListener('DOMContentLoaded', () => {
     game.initBuyQtyDisplay();
 
     // ===== CONSOLE COMMANDS =====
-    window.GPC = Object.freeze({
+    window.NVC = Object.freeze({
         help() {
-            console.group('%c[GPC] Available commands', 'color:#76B900;font-weight:bold');
+            console.group('%c[NVC] Available commands', 'color:#76B900;font-weight:bold');
             const cmds = [
-                ['GPC.help()',                 'Print this command list'],
-                ['GPC.debug()',                'Print all current game values'],
-                ['GPC.setFrames(n)',           'Set current frames to n'],
-                ['GPC.addFrames(n)',           'Add n frames (negative to subtract)'],
-                ['GPC.setBuilding(i, count)',  'Set owned count for building index i'],
-                ['GPC.buyAllBuildings(count)', 'Set every building to count'],
-                ['GPC.unlockAllUpgrades()',    'Mark all shop upgrades as purchased'],
-                ['GPC.triggerChip()',          'Force the Golden Chip to appear now'],
-                ['GPC.setDriverPoints(n)',     'Set Driver Points directly (debug only)'],
-                ['GPC.resetSave()',            'Wipe localStorage save and reload'],
-                ['GPC.exportSave()',           'Print save JSON to console'],
-                ['GPC.importSave(json)',       'Load a save from a JSON string'],
+                ['NVC.help()',                 'Print this command list'],
+                ['NVC.debug()',                'Print all current game values'],
+                ['NVC.setFrames(n)',           'Set current frames to n'],
+                ['NVC.addFrames(n)',           'Add n frames (negative to subtract)'],
+                ['NVC.setBuilding(i, count)',  'Set owned count for building index i'],
+                ['NVC.buyAllBuildings(count)', 'Set every building to count'],
+                ['NVC.unlockAllUpgrades()',    'Mark all shop upgrades as purchased'],
+                ['NVC.triggerChip()',          'Force the Golden Chip to appear now'],
+                ['NVC.setDriverPoints(n)',     'Set Driver Points directly (debug only)'],
+                ['NVC.resetSave()',            'Wipe localStorage save and reload'],
+                ['NVC.exportSave()',           'Print save JSON to console'],
+                ['NVC.importSave(json)',       'Load a save from a JSON string'],
             ];
             console.table(cmds.map(([cmd, desc]) => ({ command: cmd, description: desc })));
             console.groupEnd();
         },
         debug() {
-            console.group('%c[GPC] Debug snapshot', 'color:#76B900;font-weight:bold');
+            console.group('%c[NVC] Debug snapshot', 'color:#76B900;font-weight:bold');
             console.log('frames:', shortenNumber(game.state.frames), `(${game.state.frames})`);
             console.log('lifetime:', shortenNumber(game.state.lifetimeFrames));
             console.log('fps:', shortenNumber(game.calcFPS()), 'raw:', shortenNumber(game.rawFps()));
@@ -1230,7 +1230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     });
 
-    console.log('%c[GPC]%c Type %cGPC.help()%c for console commands.',
+    console.log('%c[NVC]%c Type %cNVC.help()%c for console commands.',
         'color:#76B900;font-weight:bold', 'color:inherit',
         'color:#76B900;font-weight:bold', 'color:inherit');
 });
