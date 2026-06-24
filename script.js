@@ -1,7 +1,7 @@
 'use strict';
 
 /* =========================================================================
-   GPU CLICKER — core script
+   NVIDIA CLICKER — core script
    A from-scratch rewrite. Architecture inspired by Cookie Clicker's
    buildings/upgrades/shimmer model (flat 1.15x cost growth, "owns >= N"
    upgrade unlocks, a shimmer pool with several effect types, and a light
@@ -929,8 +929,8 @@ GpuClicker.prototype.updateDisplay = function (full) {
     this._setText('fpsValue', shortenNumber(fps));
 
     document.title = this.settings.titleFPS
-        ? `${shortenNumber(fps)}/s – GPU Clicker`
-        : `${shortenNumber(this.state.frames)} Frames – GPU Clicker`;
+        ? `${shortenNumber(fps)}/s – NVIDIA Clicker`
+        : `${shortenNumber(this.state.frames)} Frames – NVIDIA Clicker`;
 
     // Buildings — price text only needs refresh every frame; row reveal logic
     // (full=true) on purchases / load.
