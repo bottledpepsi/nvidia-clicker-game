@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NVIDIA Clicker</title>
+    <title>GPU Clicker</title>
     <link rel="icon" href="https://icons.iconarchive.com/icons/martz90/circle-addon1/512/nvidia-icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -15,8 +15,10 @@
     <div id="hiddenMenu">
         <button id="menuButton" aria-label="Options menu" aria-haspopup="true" aria-expanded="false">≡</button>
         <div id="menuItems" role="menu">
+            <button id="openPrestige" role="menuitem">Driver Update</button>
+            <button id="openAchievements" role="menuitem">Achievements</button>
             <button id="openSettings" role="menuitem">Settings</button>
-            <button id="resetSave"    role="menuitem">Reset Save</button>
+            <button id="resetSave" role="menuitem">Reset Save</button>
         </div>
     </div>
 
@@ -58,30 +60,81 @@
                         <span class="toggle-slider"></span>
                     </div>
                 </label>
+                <label class="setting-row">
+                    <div class="setting-label">
+                        <span class="setting-name">Reduced motion</span>
+                        <span class="setting-desc">Disable click particles and floating animations</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="set-reducedMotion">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
             </div>
             <div class="modal-footer">Settings saved automatically to your browser</div>
+        </div>
+    </div>
+
+    <!-- ===== ACHIEVEMENTS MODAL ===== -->
+    <div id="achievementsModal" class="modal-overlay" hidden>
+        <div class="modal-box modal-box--wide">
+            <div class="modal-header">
+                <span>Achievements <span id="achievementsProgress" class="modal-header-sub">0 / 0</span></span>
+                <button id="closeAchievements" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body modal-body--scroll">
+                <div id="achievementsGrid" class="ach-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PRESTIGE MODAL ===== -->
+    <div id="prestigeModal" class="modal-overlay" hidden>
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Driver Update</span>
+                <button id="closePrestige" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="prestige-explain">
+                    Updating your drivers resets your frames, GPUs, and most
+                    upgrades — but permanently converts lifetime frames into
+                    <strong>Driver Points</strong>, each granting <strong>+1%</strong>
+                    global production, forever.
+                </p>
+                <div class="prestige-stats">
+                    <div class="prestige-stat">
+                        <span class="prestige-stat-label">Current Driver Points</span>
+                        <span class="prestige-stat-value" id="prestigeCurrentPoints">0</span>
+                    </div>
+                    <div class="prestige-stat">
+                        <span class="prestige-stat-label">Points Gained</span>
+                        <span class="prestige-stat-value prestige-gain" id="prestigeGainPoints">0</span>
+                    </div>
+                    <div class="prestige-stat">
+                        <span class="prestige-stat-label">New Multiplier</span>
+                        <span class="prestige-stat-value" id="prestigeNewMult">x1.00</span>
+                    </div>
+                </div>
+                <button id="confirmPrestige" class="prestige-confirm-btn">Update Drivers</button>
+            </div>
         </div>
     </div>
 
     <!-- ===== LEFT PANEL ===== -->
     <div id="leftPanel">
 
-        <!-- Frame counter -->
         <div id="framesContainer" aria-live="polite" aria-atomic="true">
             <div id="framesLabel">Total Frames</div>
             <div id="frames"><span id="framesValue">0</span></div>
-            <div id="fpsCounter">
-                <span id="fpsValue">0.0</span> frames / sec
-            </div>
+            <div id="fpsCounter"><span id="fpsValue">0.0</span> frames / sec</div>
         </div>
 
-        <!-- Active buff indicator (hidden until magic chip is collected) -->
         <div id="buffBar" hidden>
-            <div id="buffLabel">x5 BUFF — 30s</div>
+            <div id="buffLabel">BUFF</div>
             <div id="buffTrack"><div id="buffFill"></div></div>
         </div>
 
-        <!-- Clicker + golden chip -->
         <div id="clickerWrapper">
             <img
                 src="https://icons.iconarchive.com/icons/martz90/circle-addon1/512/nvidia-icon.png"
@@ -93,67 +146,26 @@
             >
         </div>
 
-        <!--
-            Magic chip spawn zone — the only area where the MagicChip can appear.
-            Keep clear of the upgrades panel. Chip spawns randomly within this box.
-            Replace the placeholder src below with your real magic chip PNG when ready.
-        -->
-        <div id="magicSpawnZone" aria-label="Magic chip spawn area">
-            <div id="magicChip" hidden role="button" tabindex="0" aria-label="Magic Chip! Click for x5 frames!">
-                <!-- PLACEHOLDER: swap src to your real magic chip PNG -->
-                <img
-                    src="https://placehold.co/80x80/1a003a/c970ff?text=✦"
-                    alt="Magic Chip"
-                    draggable="false"
-                >
-                <span class="magic-label">MAGIC</span>
+        <div id="chipSpawnZone" aria-label="Golden Chip spawn area">
+            <div id="goldenChip" hidden role="button" tabindex="0" aria-label="Golden Chip! Click for a bonus!">
+                <span class="chip-glyph">✦</span>
+                <span class="chip-label">CHIP</span>
             </div>
         </div>
 
-        <!-- Statistics panel — hidden by default, toggled in Settings -->
         <div id="statsPanel">
             <div class="stats-header">Statistics</div>
             <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-label">All-Time Frames</span>
-                    <span class="stat-value" id="stat-totalFrames">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Total Clicks</span>
-                    <span class="stat-value" id="stat-totalClicks">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Click Value</span>
-                    <span class="stat-value" id="stat-clickValue">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Passive Mult</span>
-                    <span class="stat-value" id="stat-passiveMult">x1</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Click Mult</span>
-                    <span class="stat-value" id="stat-clickMult">x1</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">GPUs Owned</span>
-                    <span class="stat-value" id="stat-gpusOwned">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Peak FPS</span>
-                    <span class="stat-value" id="stat-peakFPS">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Boosters</span>
-                    <span class="stat-value" id="stat-boosters">0 / 26</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Session Time</span>
-                    <span class="stat-value" id="stat-sessionTime">0s</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Magic Rate</span>
-                    <span class="stat-value" id="stat-magicRate">~60 min</span>
-                </div>
+                <div class="stat-item"><span class="stat-label">Lifetime Frames</span><span class="stat-value" id="stat-lifetimeFrames">0</span></div>
+                <div class="stat-item"><span class="stat-label">Total Clicks</span><span class="stat-value" id="stat-totalClicks">0</span></div>
+                <div class="stat-item"><span class="stat-label">Click Value</span><span class="stat-value" id="stat-clickValue">0</span></div>
+                <div class="stat-item"><span class="stat-label">Global Mult</span><span class="stat-value" id="stat-globalMult">x1</span></div>
+                <div class="stat-item"><span class="stat-label">GPUs Owned</span><span class="stat-value" id="stat-gpusOwned">0</span></div>
+                <div class="stat-item"><span class="stat-label">Peak FPS</span><span class="stat-value" id="stat-peakFPS">0</span></div>
+                <div class="stat-item"><span class="stat-label">Driver Points</span><span class="stat-value" id="stat-driverPoints">0</span></div>
+                <div class="stat-item"><span class="stat-label">Chips Collected</span><span class="stat-value" id="stat-chipsCollected">0</span></div>
+                <div class="stat-item"><span class="stat-label">Session Time</span><span class="stat-value" id="stat-sessionTime">0s</span></div>
+                <div class="stat-item"><span class="stat-label">Chip Rate</span><span class="stat-value" id="stat-chipRate">~90s</span></div>
             </div>
         </div>
 
@@ -163,15 +175,41 @@
     <div id="rightPanel">
         <div id="store">
             <h2>Store</h2>
-            <div class="section-label">One-Time Upgrades</div>
-            <div id="oneTimeUpgradesContainer"></div>
-            <div class="section-label">GPU Upgrades</div>
-            <div id="regularUpgradesContainer"></div>
+
+            <div class="section-label">GPUs</div>
+            <div class="buy-qty-row">
+                <span class="buy-qty-caption">Buy</span>
+                <button class="buy-qty-btn" data-qty="1">x1</button>
+                <button class="buy-qty-btn" data-qty="10">x10</button>
+                <button class="buy-qty-btn" data-qty="max">Max</button>
+            </div>
+            <div id="buildingsContainer"></div>
+
+            <div class="shop-tabs">
+                <button class="shop-tab active" data-panel="click">Click <span class="tab-badge" id="tabBadge_click"></span></button>
+                <button class="shop-tab" data-panel="global">Global <span class="tab-badge" id="tabBadge_global"></span></button>
+                <button class="shop-tab" data-panel="gpu">GPU <span class="tab-badge" id="tabBadge_gpu"></span></button>
+                <button class="shop-tab" data-panel="chip">Chip <span class="tab-badge" id="tabBadge_chip"></span></button>
+            </div>
+
+            <div id="panel-click" class="shop-panel active">
+                <div id="clickUpgradesContainer"></div>
+            </div>
+            <div id="panel-global" class="shop-panel">
+                <div id="globalUpgradesContainer"></div>
+            </div>
+            <div id="panel-gpu" class="shop-panel">
+                <div id="buildingUpgradesContainer"></div>
+            </div>
+            <div id="panel-chip" class="shop-panel">
+                <div id="chipUpgradesContainer"></div>
+            </div>
         </div>
     </div>
 
-    <!-- ===== TOAST ===== -->
+    <!-- ===== TOASTS ===== -->
     <div id="toast" role="alert" aria-live="assertive"></div>
+    <div id="achToast" role="status" aria-live="polite"></div>
 
     <!-- ===== FOOTER ===== -->
     <footer>
@@ -182,7 +220,7 @@
             <span>|</span>
             <a href="https://github.com/bottledpepsi/nvidia-clicker-game/" target="_blank" rel="noopener">GitHub</a>
             <span>|</span>
-            <span>v2.1.0</span>
+            <span>v3.0.0</span>
         </div>
     </footer>
 
